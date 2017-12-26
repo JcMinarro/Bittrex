@@ -1,11 +1,12 @@
 package com.jcminarro.bittrex.api
 
+import com.jcminarro.bittrex.BittrexCredentials
 import com.jcminarro.bittrex.BittrexException
 import com.jcminarro.bittrex.BittrexIOException
 import retrofit2.Call
 
-open class APIClient<out T>(service: Class<T>){
-    val endpoint: T = RetrofitFactory.create(service)
+open class APIClient<out T>(bittrexCredentials: BittrexCredentials, service: Class<T>){
+    val endpoint: T = RetrofitFactory.create(bittrexCredentials, service)
 
 
     @Throws(BittrexException::class)

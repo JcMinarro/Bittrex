@@ -2,9 +2,9 @@ package com.jcminarro.bittrex
 
 import com.jcminarro.bittrex.api.PublicAPI
 
-class Bittrex {
+class Bittrex(bittrexCredentials: BittrexCredentials = NON_CREDENTIAL) {
 
-    private val publicApi by lazy { PublicAPI() }
+    private val publicApi by lazy { PublicAPI(bittrexCredentials) }
 
     @Throws(BittrexException::class)
     fun getMarkets() = publicApi.getMarkets()

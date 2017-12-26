@@ -32,11 +32,11 @@ object RetrofitFactory {
     private const val BITTREX_BASE_URL = "https://bittrex.com/api/v1.1/"
     internal var baseApiUrl = BITTREX_BASE_URL
 
-    fun <T> create(service: Class<T>) =
+    fun <T> create(bittrexCredentials: BittrexCredentials, service: Class<T>) =
             Retrofit
                     .Builder()
                     .baseUrl(baseApiUrl)
-                    .client(getDefaultHttpClient())
+                    .client(getDefaultHttpClient(bittrexCredentials))
                     .addConverterFactory(getConverterFactory())
                     .build()
                     .create(service)
@@ -49,11 +49,12 @@ object RetrofitFactory {
                                     .create())
 
 
-    private fun getDefaultHttpClient(): OkHttpClient =
+    private fun getDefaultHttpClient(bittrexCredentials: BittrexCredentials): OkHttpClient =
             OkHttpClient.Builder()
                     .connectionPool(CONNECTION_POOL)
                     .connectTimeout(CONNECT_TIMEOUT_SECONDS, TimeUnit.SECONDS)
                     .readTimeout(READ_TIMEOUT_SECONDS, TimeUnit.SECONDS)
+                    .addInterceptor(APISignerInterceptor(bittrexCredentials))
                     .addInterceptor(CurlInterceptor({ println(it) }))
                     .addInterceptor(HttpLoggingInterceptor({ println(it) }).setLevel(HttpLoggingInterceptor.Level.BASIC))
                     .build()

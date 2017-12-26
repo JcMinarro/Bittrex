@@ -2,7 +2,8 @@ package com.jcminarro.bittrex.api
 
 import com.jcminarro.bittrex.*
 
-internal class PublicAPI : APIClient<PublicAPIEndpoint>(PublicAPIEndpoint::class.java) {
+internal class PublicAPI(bittrexCredentials: BittrexCredentials)
+    : APIClient<PublicAPIEndpoint>(bittrexCredentials, PublicAPIEndpoint::class.java) {
 
     @Throws(BittrexException::class)
     fun getMarkets() = evaluateCall { endpoint.getMarkets() }.map { it.toModel() }

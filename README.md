@@ -1,5 +1,8 @@
 # Bittrex
 
+[![CircleCI](https://circleci.com/gh/JcMinarro/Bittrex/tree/master.svg?style=svg)](https://circleci.com/gh/JcMinarro/Bittrex/tree/master)
+
+
 Kotlin client for accessing the Bittrex API.
 It uses the API Version v1.1
 API Spec: https://bittrex.com/home/api

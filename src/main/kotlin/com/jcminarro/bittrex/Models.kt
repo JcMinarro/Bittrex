@@ -52,6 +52,13 @@ data class Trade(val id: Int,
                  val fillType: FillType,
                  val orderType: OrderType)
 
+data class BittrexCredentials(val key: String,
+                              val secret: String) {
+    internal fun isNotBlank() = key.isNotBlank() && secret.isNotBlank()
+}
+
+val NON_CREDENTIAL = BittrexCredentials("", "")
+
 enum class FillType {
     FILL,
     PARTIAL_FILL

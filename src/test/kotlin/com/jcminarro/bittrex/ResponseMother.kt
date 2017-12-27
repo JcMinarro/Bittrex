@@ -161,12 +161,12 @@ internal fun createMarketSummaryResponse(marketName: String = MARKET_SUMMARY_RES
                 prevDay,
                 created)
 
-internal fun createOrderResponse(quantity: Double = ORDER_RESPONSE_quantity,
+internal fun createOrderbookEntryResponse(quantity: Double = ORDER_RESPONSE_quantity,
                                  rate: Double = ORDER_RESPONSE_rate) =
-        OrderResponse(quantity, rate)
+        OrderbookEntryResponse(quantity, rate)
 
-internal fun createOrderbookResponse(buy: List<OrderResponse> = listOf(),
-                                     sell: List<OrderResponse> = listOf()) =
+internal fun createOrderbookResponse(buy: List<OrderbookEntryResponse> = listOf(),
+                                     sell: List<OrderbookEntryResponse> = listOf()) =
         OrderbookResponse(buy, sell)
 
 internal fun createTradeResponse(id: Int = TRADE_MOTHER_id,

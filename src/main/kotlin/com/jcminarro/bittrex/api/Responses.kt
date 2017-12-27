@@ -46,13 +46,13 @@ internal data class MarketSummaryResponse(
         @SerializedName("PrevDay") val prevDay: Double,
         @SerializedName("Created") val created: Date)
 
-internal data class OrderResponse(
+internal data class OrderbookEntryResponse(
         @SerializedName("Quantity") val quantity: Double,
         @SerializedName("Rate") val rate: Double)
 
 internal data class OrderbookResponse(
-        @SerializedName("Buy") val buy: List<OrderResponse>,
-        @SerializedName("Sell") val sell: List<OrderResponse>)
+        @SerializedName("Buy") val buy: List<OrderbookEntryResponse>,
+        @SerializedName("Sell") val sell: List<OrderbookEntryResponse>)
 
 internal data class TradeResponse(
         @SerializedName("Id") val id: Int,

@@ -38,11 +38,11 @@ data class MarketSummary(val name: String,
                          val timestamp: Date,
                          val created: Date)
 
-data class Order(val quantity: Double,
+data class OrderbookEntry(val quantity: Double,
                  val rate: Double)
 
-data class Orderbook(val buy: List<Order>,
-                     val sell: List<Order>)
+data class Orderbook(val buy: List<OrderbookEntry>,
+                     val sell: List<OrderbookEntry>)
 
 data class Trade(val id: Int,
                  val timestamp: Date,

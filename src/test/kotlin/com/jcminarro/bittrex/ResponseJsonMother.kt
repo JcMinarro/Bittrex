@@ -77,21 +77,21 @@ private fun createMarketSummaryResponseJson(marketSummaryResponse: MarketSummary
 
 internal fun createOrderbookResponseJson(orderbookResponse: OrderbookResponse =
                                          createOrderbookResponse(
-                                                 listOf(createOrderResponse()),
-                                                 listOf(createOrderResponse()))) =
+                                                 listOf(createOrderbookEntryResponse()),
+                                                 listOf(createOrderbookEntryResponse()))) =
         createGenericResponseJson(
                 """
                 {
-                    "Buy" : [ ${orderbookResponse.buy.joinToString(",") { createOrderResponseJson(it) }}],
-                    "Sell" : [ ${orderbookResponse.sell.joinToString(",") { createOrderResponseJson(it) }} ]
+                    "Buy" : [ ${orderbookResponse.buy.joinToString(",") { createOrderbookEntryResponseJson(it) }}],
+                    "Sell" : [ ${orderbookResponse.sell.joinToString(",") { createOrderbookEntryResponseJson(it) }} ]
                 }
                 """.trimIndent())
 
-private fun createOrderResponseJson(orderResponse: OrderResponse) =
+private fun createOrderbookEntryResponseJson(orderbookEntryResponse: OrderbookEntryResponse) =
         """
         {
-            "Quantity" : ${orderResponse.quantity},
-            "Rate" : ${orderResponse.rate}
+            "Quantity" : ${orderbookEntryResponse.quantity},
+            "Rate" : ${orderbookEntryResponse.rate}
 		}
         """.trimIndent()
 

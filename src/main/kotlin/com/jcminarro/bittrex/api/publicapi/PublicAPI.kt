@@ -73,7 +73,7 @@ fun mapOrderType(orderType: String) = when (orderType.toLowerCase()) {
 private fun OrderbookResponse.toModel() =
         Orderbook(buy.map { it.toModel() }, sell.map { it.toModel() })
 
-private fun OrderResponse.toModel() = Order(quantity, rate)
+private fun OrderbookEntryResponse.toModel() = OrderbookEntry(quantity, rate)
 
 private fun TickResponse.toModel() = Tick(bid, ask, last)
 

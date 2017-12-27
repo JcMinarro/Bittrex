@@ -1,6 +1,6 @@
 package com.jcminarro.bittrex
 
-import com.jcminarro.bittrex.api.PublicAPI
+import com.jcminarro.bittrex.api.publicapi.PublicAPI
 
 class Bittrex(bittrexCredentials: BittrexCredentials = NON_CREDENTIAL) {
 

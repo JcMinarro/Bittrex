@@ -1,6 +1,7 @@
-package com.jcminarro.bittrex.api
+package com.jcminarro.bittrex.api.publicapi
 
 import com.jcminarro.bittrex.*
+import com.jcminarro.bittrex.api.*
 
 internal class PublicAPI(bittrexCredentials: BittrexCredentials)
     : APIClient<PublicAPIEndpoint>(bittrexCredentials, PublicAPIEndpoint::class.java) {

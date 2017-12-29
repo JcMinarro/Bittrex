@@ -6,7 +6,14 @@ import com.jcminarro.bittrex.api.publicapi.PublicAPI
 class Bittrex(bittrexCredentials: BittrexCredentials = NON_CREDENTIAL) {
 
     private val publicApi by lazy { PublicAPI(bittrexCredentials) }
-    private val accountApi by lazy { AccountAPI(bittrexCredentials) }
+    private val accountApi by lazy {
+        if (bittrexCredentials.isNotBlank()) {
+            AccountAPI(bittrexCredentials)
+        } else {
+            throw IllegalBittrexCredentialsException(
+                    "You must provide a ${BittrexCredentials::class.java.canonicalName} to use this method")
+        }
+    }
 
     @Throws(BittrexException::class)
     fun getMarkets() = publicApi.getMarkets()

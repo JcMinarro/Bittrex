@@ -62,3 +62,59 @@ internal data class TradeResponse(
         @SerializedName("Total") val total: Double,
         @SerializedName("FillType") val fillType: String,
         @SerializedName("OrderType") val orderType: String)
+
+internal data class BalanceResponse(
+        @SerializedName("Currency") val currency: String,
+        @SerializedName("Balance") val balance: Double,
+        @SerializedName("Available") val available: Double,
+        @SerializedName("Pending") val pending: Double,
+        @SerializedName("CryptoAddress") val cryptoAddress: String?,
+        @SerializedName("Requested") val requested: Boolean?,
+        @SerializedName("Uuid") val uuid: String?)
+
+internal data class DepositAddressResponse(
+        @SerializedName("Currency") val currency: String,
+        @SerializedName("Address") val address: String
+)
+
+internal data class WithdrawalRequestedResponse(@SerializedName("uuid") val uuid: String)
+
+internal data class OrderResponse(
+        @SerializedName("OrderUuid") val orderUuid: String,
+        @SerializedName("Exchange") val exchange: String,
+        @SerializedName("OrderType") val orderType: String,
+        @SerializedName("Quantity") val quantity: Double,
+        @SerializedName("QuantityRemaining") val quantityRemaining: Double,
+        @SerializedName("Limit") val limit: Double,
+        @SerializedName("Commission") val commissionPaid: Double,
+        @SerializedName("Price") val price: Double,
+        @SerializedName("PricePerUnit") val pricePerUnit: Double,
+        @SerializedName("TimeStamp") val opened: Date?,
+        @SerializedName("Closed") val closed: Date?,
+        @SerializedName("CancelInitiated") val cancelInitiated: Boolean,
+        @SerializedName("ImmediateOrCancel") val immediateOrCancel: Boolean,
+        @SerializedName("IsConditional") val isConditional: Boolean,
+        @SerializedName("Condition") val condition: String?,
+        @SerializedName("ConditionTarget") val conditionTarget: String?)
+
+internal data class WithdrawalResponse(
+        @SerializedName("PaymentUuid") val paymentUuid: String,
+        @SerializedName("Currency") val currency: String,
+        @SerializedName("Amount") val amount: Double,
+        @SerializedName("Address") val address: String,
+        @SerializedName("Opened") val opened: Date,
+        @SerializedName("Authorized") val authorized: Boolean,
+        @SerializedName("PendingPayment") val pendingPayment: Boolean,
+        @SerializedName("TxCost") val txCost: Double,
+        @SerializedName("TxId") val txId: String,
+        @SerializedName("Canceled") val canceled: Boolean,
+        @SerializedName("InvalidAddress") val invalidAddress: Boolean)
+
+internal data class DepositResponse(
+        @SerializedName("Id") val id: Int,
+        @SerializedName("Amount") val amount: Double,
+        @SerializedName("Currency") val currency: String,
+        @SerializedName("Confirmations") val confirmations: Int,
+        @SerializedName("LastUpdated") val lastUpdated: Date,
+        @SerializedName("TxId") val txId: String,
+        @SerializedName("CryptoAddress") val cryptoAddress: String)

@@ -24,7 +24,7 @@ class BittrexTest {
     @Before
     fun setUp() {
         RetrofitFactory.baseApiUrl = DEFAULT_API_HOST + wiremockRule.port()
-        bittrex = Bittrex()
+        givenNonBlankCredentials()
     }
 
     @Test
@@ -181,5 +181,69 @@ class BittrexTest {
             fillType `should equal` FillType.PARTIAL_FILL
             orderType `should equal` OrderType.SELL
         }
+    }
+
+    @Test(expected = IllegalBittrexCredentialsException::class)
+    fun `Should throw and exception if try to get balances without Credentials`() {
+        givenBlankCredentials()
+
+        bittrex.getBalances()
+    }
+
+    @Test(expected = IllegalBittrexCredentialsException::class)
+    fun `Should throw and exception if try to get balance without Credentials`() {
+        givenBlankCredentials()
+
+        bittrex.getBalance("BTC")
+    }
+
+    @Test(expected = IllegalBittrexCredentialsException::class)
+    fun `Should throw and exception if try to get OrderHistory without Credentials`() {
+        givenBlankCredentials()
+
+        bittrex.getOrderHistory()
+    }
+
+    @Test(expected = IllegalBittrexCredentialsException::class)
+    fun `Should throw and exception if try to get Order without Credentials`() {
+        givenBlankCredentials()
+
+        bittrex.getOrder("c9887575-b22b-4a78-9752-32c33de5c0f6")
+    }
+
+    @Test(expected = IllegalBittrexCredentialsException::class)
+    fun `Should throw and exception if try to get WithdrawalHistory without Credentials`() {
+        givenBlankCredentials()
+
+        bittrex.getWithdrawalHistory()
+    }
+
+    @Test(expected = IllegalBittrexCredentialsException::class)
+    fun `Should throw and exception if try to withdraw without Credentials`() {
+        givenBlankCredentials()
+
+        bittrex.withdraw("BTC", 250.025, "1p52lHoVR76PMDishab2YmRHsbekCdGquK", "Payment note")
+    }
+
+    @Test(expected = IllegalBittrexCredentialsException::class)
+    fun `Should throw and exception if try to get DepositAddress without Credentials`() {
+        givenBlankCredentials()
+
+        bittrex.getDepositAddress("BTC")
+    }
+
+    @Test(expected = IllegalBittrexCredentialsException::class)
+    fun `Should throw and exception if try to get DepositHistory without Credentials`() {
+        givenBlankCredentials()
+
+        bittrex.getDepositHistory()
+    }
+
+    private fun givenBlankCredentials() {
+        bittrex = Bittrex()
+    }
+
+    private fun givenNonBlankCredentials() {
+        bittrex = Bittrex(BittrexCredentials("SomeAPIKey", "SomeSecret"))
     }
 }

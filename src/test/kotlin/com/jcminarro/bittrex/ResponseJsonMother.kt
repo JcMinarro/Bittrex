@@ -122,5 +122,108 @@ private fun createGenericResponseJson(result: String) =
         }
         """.trimIndent()
 
+internal fun createBalanceResponseJson(balance: BalanceResponse = createBalanceResponse()) =
+        createGenericResponseJson(createBalanceResponseContentJson(balance))
+
+internal fun createBalanceHistoryResponseJson(balances: List<BalanceResponse> = listOf(createBalanceResponse())) =
+        createGenericResponseJson(
+                "[ ${balances.joinToString(", ") { createBalanceResponseContentJson(it) }} ]")
+
+private fun createBalanceResponseContentJson(balance: BalanceResponse): String =
+        """
+        {
+            "Currency":"${balance.currency}",
+            "Balance": ${balance.balance},
+            "Available":${balance.available},
+            "Pending":${balance.pending},
+            "CryptoAddress":"${balance.cryptoAddress}",
+            "Requested":${balance.requested},
+            "Uuid":"${balance.uuid}"
+        }
+        """.trimIndent()
+
+internal fun createDepositAddressResponseJson(
+        depositAddressResponse: DepositAddressResponse = createDepositAddressResponse()) =
+        createGenericResponseJson(
+                """
+                {
+                    "Currency":"${depositAddressResponse.currency}",
+                    "Address":"${depositAddressResponse.address}"
+                }
+                """.trimIndent()
+        )
+
+internal fun createWithdrawalRequestedResponseJson(
+        withdrawalRequestedResponse: WithdrawalRequestedResponse = createWithdrawalRequestedResponse()) =
+        createGenericResponseJson("{\"uuid\": \"${withdrawalRequestedResponse.uuid}\"}")
+
+internal fun createOrderResponseJson(orderResponse: OrderResponse = createOrderResponse()) =
+        createGenericResponseJson(createOrderResponseContentJson(orderResponse))
+
+internal fun createOrderHistoryResponseJson(orderHistoryResopnse: List<OrderResponse> = listOf(createOrderResponse())) =
+        createGenericResponseJson(
+                "[ ${orderHistoryResopnse.joinToString(", ") { createOrderResponseContentJson(it) }} ]")
+
+internal fun createWithdrawalHistoryResponseJson(
+        withdrawalHistoryResponse: List<WithdrawalResponse> = listOf(createWithdrawalResponse())) =
+        createGenericResponseJson(
+                "[ ${withdrawalHistoryResponse.joinToString(",") { createWithdrawalResponseJson(it) }} ]")
+
+internal fun createDepositHistoryResponseJson(
+        depositHistoryResponse: List<DepositResponse> = listOf(createDepositResponse())) =
+        createGenericResponseJson(
+                "[ ${depositHistoryResponse.joinToString(",") { createDepositResponseJson(it) }} ]")
+
+private fun createDepositResponseJson(depositResponse: DepositResponse) =
+        """
+        {
+            "Id": ${depositResponse.id},
+            "Amount": ${depositResponse.amount},
+            "Currency": "${depositResponse.currency}",
+            "Confirmations": ${depositResponse.confirmations},
+            "LastUpdated": "${depositResponse.lastUpdated.format()}",
+            "TxId": "${depositResponse.txId}",
+            "CryptoAddress": "${depositResponse.cryptoAddress}"
+        }
+        """.trimIndent()
+
+private fun createWithdrawalResponseJson(withdrawalResponse: WithdrawalResponse) =
+        """
+        {
+            "PaymentUuid":"${withdrawalResponse.paymentUuid}",
+            "Currency":"${withdrawalResponse.currency}",
+            "Amount":${withdrawalResponse.amount},
+            "Address":"${withdrawalResponse.address}",
+            "Opened":"${withdrawalResponse.opened.format()}",
+            "Authorized":${withdrawalResponse.authorized},
+            "PendingPayment":${withdrawalResponse.pendingPayment},
+            "TxCost":${withdrawalResponse.txCost},
+            "TxId":"${withdrawalResponse.txId}",
+            "Canceled":${withdrawalResponse.canceled},
+            "InvalidAddress":${withdrawalResponse.invalidAddress}
+        }
+        """.trimIndent()
+
+private fun createOrderResponseContentJson(orderResponse: OrderResponse) =
+        """
+        {
+            "OrderUuid": "${orderResponse.orderUuid}",
+            "Exchange": "${orderResponse.exchange}",
+            "TimeStamp": "${orderResponse.opened?.format()}",
+            "OrderType": "${orderResponse.orderType}",
+            "Limit": ${orderResponse.limit},
+            "Quantity": ${orderResponse.quantity},
+            "QuantityRemaining": ${orderResponse.quantityRemaining},
+            "Commission": ${orderResponse.commissionPaid},
+            "Price": ${orderResponse.price},
+            "PricePerUnit": ${orderResponse.pricePerUnit},
+            "IsConditional": ${orderResponse.isConditional},
+            "Condition": "${orderResponse.condition}",
+            "ConditionTarget": ${orderResponse.conditionTarget},
+            "ImmediateOrCancel": ${orderResponse.immediateOrCancel},
+            "Closed": "${orderResponse.closed?.format()}"
+        }
+        """.trimIndent()
+
 private fun Date.format(pattern: String = "yyyy-MM-dd'T'HH:mm:ss"): String = SimpleDateFormat(pattern).format(this)
 

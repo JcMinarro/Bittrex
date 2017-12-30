@@ -3,6 +3,7 @@ package com.jcminarro.bittrex
 import com.github.tomakehurst.wiremock.client.WireMock.*
 import com.github.tomakehurst.wiremock.core.WireMockConfiguration
 import com.github.tomakehurst.wiremock.junit.WireMockRule
+import com.github.tomakehurst.wiremock.matching.EqualToPattern
 import com.jcminarro.bittrex.api.RetrofitFactory
 import org.amshove.kluent.`should be`
 import org.amshove.kluent.`should equal to`
@@ -237,6 +238,211 @@ class BittrexTest {
         givenBlankCredentials()
 
         bittrex.getDepositHistory()
+    }
+
+    @Test
+    fun `Should return a list of balances`() {
+        stubFor(get(EndpointPath.GET_BALANCES)
+                .willReturn(aResponse().withBody(
+                        createBalanceHistoryResponseJson())))
+
+        val balances = bittrex.getBalances()
+
+        balances.size `should equal to` 1
+        with(balances[0]) {
+            currency `should equal` ResponseMother.BALANCE_RESPONSE_MOTHER_currency
+            balance `should equal` ResponseMother.BALANCE_RESPONSE_MOTHER_balance
+            available `should equal` ResponseMother.BALANCE_RESPONSE_MOTHER_available
+            pending `should equal` ResponseMother.BALANCE_RESPONSE_MOTHER_pending
+            cryptoAddress `should equal` ResponseMother.BALANCE_RESPONSE_MOTHER_cryptoAddress
+            requested `should equal` ResponseMother.BALANCE_RESPONSE_MOTHER_requested
+            uuid `should equal` ResponseMother.BALANCE_RESPONSE_MOTHER_uuid
+        }
+    }
+
+    @Test
+    fun `Should return a balance`() {
+        stubFor(get(EndpointPath.GET_BALANCE)
+                .willReturn(aResponse().withBody(
+                        createBalanceResponseJson())))
+
+        val balance = bittrex.getBalance("BTC")
+
+        balance.currency `should equal` ResponseMother.BALANCE_RESPONSE_MOTHER_currency
+        balance.balance `should equal` ResponseMother.BALANCE_RESPONSE_MOTHER_balance
+        balance.available `should equal` ResponseMother.BALANCE_RESPONSE_MOTHER_available
+        balance.pending `should equal` ResponseMother.BALANCE_RESPONSE_MOTHER_pending
+        balance.cryptoAddress `should equal` ResponseMother.BALANCE_RESPONSE_MOTHER_cryptoAddress
+        balance.requested `should equal` ResponseMother.BALANCE_RESPONSE_MOTHER_requested
+        balance.uuid `should equal` ResponseMother.BALANCE_RESPONSE_MOTHER_uuid
+    }
+
+    @Test
+    fun `Should return OrderHistory`() {
+        stubFor(get(EndpointPath.GET_ORDER_HISTORY)
+                .willReturn(aResponse().withBody(
+                        createOrderHistoryResponseJson(
+                                listOf(
+                                        createOrderResponse(orderType = "LIMIT_BUY"),
+                                        createOrderResponse(orderType = "LIMIT_SELL"))))))
+
+        val orderHistory = bittrex.getOrderHistory()
+
+        orderHistory.size `should equal to` 2
+        with(orderHistory[0]) {
+            orderUuid `should equal` ResponseMother.ORDER_RESPONSE_MOTHER_orderUuid
+            exchange `should equal` ResponseMother.ORDER_RESPONSE_MOTHER_exchange
+            orderType `should equal` OrderType.BUY
+            quantity `should equal` ResponseMother.ORDER_RESPONSE_MOTHER_quantity
+            quantityRemaining `should equal` ResponseMother.ORDER_RESPONSE_MOTHER_quantityRemaining
+            limit `should equal` ResponseMother.ORDER_RESPONSE_MOTHER_limit
+            commissionPaid `should equal` ResponseMother.ORDER_RESPONSE_MOTHER_commissionPaid
+            price `should equal` ResponseMother.ORDER_RESPONSE_MOTHER_price
+            pricePerUnit `should equal` ResponseMother.ORDER_RESPONSE_MOTHER_pricePerUnit
+            opened `should equal` ResponseMother.ORDER_RESPONSE_MOTHER_opened
+            closed `should equal` ResponseMother.ORDER_RESPONSE_MOTHER_closed
+            cancelInitiated `should equal` ResponseMother.ORDER_RESPONSE_MOTHER_cancelInitiated
+            immediateOrCancel `should equal` ResponseMother.ORDER_RESPONSE_MOTHER_immediateOrCancel
+            isConditional `should equal` ResponseMother.ORDER_RESPONSE_MOTHER_isConditional
+            condition `should equal` ResponseMother.ORDER_RESPONSE_MOTHER_condition
+            conditionTarget `should equal` ""
+        }
+        with(orderHistory[1]) {
+            orderUuid `should equal` ResponseMother.ORDER_RESPONSE_MOTHER_orderUuid
+            exchange `should equal` ResponseMother.ORDER_RESPONSE_MOTHER_exchange
+            orderType `should equal` OrderType.SELL
+            quantity `should equal` ResponseMother.ORDER_RESPONSE_MOTHER_quantity
+            quantityRemaining `should equal` ResponseMother.ORDER_RESPONSE_MOTHER_quantityRemaining
+            limit `should equal` ResponseMother.ORDER_RESPONSE_MOTHER_limit
+            commissionPaid `should equal` ResponseMother.ORDER_RESPONSE_MOTHER_commissionPaid
+            price `should equal` ResponseMother.ORDER_RESPONSE_MOTHER_price
+            pricePerUnit `should equal` ResponseMother.ORDER_RESPONSE_MOTHER_pricePerUnit
+            opened `should equal` ResponseMother.ORDER_RESPONSE_MOTHER_opened
+            closed `should equal` ResponseMother.ORDER_RESPONSE_MOTHER_closed
+            cancelInitiated `should equal` ResponseMother.ORDER_RESPONSE_MOTHER_cancelInitiated
+            immediateOrCancel `should equal` ResponseMother.ORDER_RESPONSE_MOTHER_immediateOrCancel
+            isConditional `should equal` ResponseMother.ORDER_RESPONSE_MOTHER_isConditional
+            condition `should equal` ResponseMother.ORDER_RESPONSE_MOTHER_condition
+            conditionTarget `should equal` ""
+        }
+    }
+
+    @Test
+    fun `Should return an Order`() {
+        stubFor(get(EndpointPath.GET_ORDER)
+                .withQueryParam("uuid", EqualToPattern("buy"))
+                .willReturn(aResponse().withBody(
+                        createOrderResponseJson(
+                                createOrderResponse(orderType = "LIMIT_BUY")))))
+        stubFor(get(EndpointPath.GET_ORDER)
+                .withQueryParam("uuid", EqualToPattern("sell"))
+                .willReturn(aResponse().withBody(
+                        createOrderResponseJson(
+                                createOrderResponse(orderType = "LIMIT_SELL")))))
+
+        val orderBuy = bittrex.getOrder("buy")
+        val orderSell = bittrex.getOrder("sell")
+
+        orderBuy.orderUuid `should equal` ResponseMother.ORDER_RESPONSE_MOTHER_orderUuid
+        orderBuy.exchange `should equal` ResponseMother.ORDER_RESPONSE_MOTHER_exchange
+        orderBuy.orderType `should equal` OrderType.BUY
+        orderBuy.quantity `should equal` ResponseMother.ORDER_RESPONSE_MOTHER_quantity
+        orderBuy.quantityRemaining `should equal` ResponseMother.ORDER_RESPONSE_MOTHER_quantityRemaining
+        orderBuy.limit `should equal` ResponseMother.ORDER_RESPONSE_MOTHER_limit
+        orderBuy.commissionPaid `should equal` ResponseMother.ORDER_RESPONSE_MOTHER_commissionPaid
+        orderBuy.price `should equal` ResponseMother.ORDER_RESPONSE_MOTHER_price
+        orderBuy.pricePerUnit `should equal` ResponseMother.ORDER_RESPONSE_MOTHER_pricePerUnit
+        orderBuy.opened `should equal` ResponseMother.ORDER_RESPONSE_MOTHER_opened
+        orderBuy.closed `should equal` ResponseMother.ORDER_RESPONSE_MOTHER_closed
+        orderBuy.cancelInitiated `should equal` ResponseMother.ORDER_RESPONSE_MOTHER_cancelInitiated
+        orderBuy.immediateOrCancel `should equal` ResponseMother.ORDER_RESPONSE_MOTHER_immediateOrCancel
+        orderBuy.isConditional `should equal` ResponseMother.ORDER_RESPONSE_MOTHER_isConditional
+        orderBuy.condition `should equal` ResponseMother.ORDER_RESPONSE_MOTHER_condition
+        orderBuy.conditionTarget `should equal` ""
+
+        orderSell.orderUuid `should equal` ResponseMother.ORDER_RESPONSE_MOTHER_orderUuid
+        orderSell.exchange `should equal` ResponseMother.ORDER_RESPONSE_MOTHER_exchange
+        orderSell.orderType `should equal` OrderType.SELL
+        orderSell.quantity `should equal` ResponseMother.ORDER_RESPONSE_MOTHER_quantity
+        orderSell.quantityRemaining `should equal` ResponseMother.ORDER_RESPONSE_MOTHER_quantityRemaining
+        orderSell.limit `should equal` ResponseMother.ORDER_RESPONSE_MOTHER_limit
+        orderSell.commissionPaid `should equal` ResponseMother.ORDER_RESPONSE_MOTHER_commissionPaid
+        orderSell.price `should equal` ResponseMother.ORDER_RESPONSE_MOTHER_price
+        orderSell.pricePerUnit `should equal` ResponseMother.ORDER_RESPONSE_MOTHER_pricePerUnit
+        orderSell.opened `should equal` ResponseMother.ORDER_RESPONSE_MOTHER_opened
+        orderSell.closed `should equal` ResponseMother.ORDER_RESPONSE_MOTHER_closed
+        orderSell.cancelInitiated `should equal` ResponseMother.ORDER_RESPONSE_MOTHER_cancelInitiated
+        orderSell.immediateOrCancel `should equal` ResponseMother.ORDER_RESPONSE_MOTHER_immediateOrCancel
+        orderSell.isConditional `should equal` ResponseMother.ORDER_RESPONSE_MOTHER_isConditional
+        orderSell.condition `should equal` ResponseMother.ORDER_RESPONSE_MOTHER_condition
+        orderSell.conditionTarget `should equal` ""
+    }
+
+    @Test
+    fun `Should return WithdrawalHistory`() {
+        stubFor(get(EndpointPath.GET_WITHDRAWAL_HISTORY)
+                .willReturn(aResponse().withBody(
+                        createWithdrawalHistoryResponseJson())))
+
+        val withdrawalHistory = bittrex.getWithdrawalHistory()
+
+        withdrawalHistory.size `should equal to` 1
+        with(withdrawalHistory[0]) {
+            paymentUuid `should equal` ResponseMother.WITHDRAWAL_RESPONSE_MOTHER_paymentUuid
+            currency `should equal` ResponseMother.WITHDRAWAL_RESPONSE_MOTHER_currency
+            amount `should equal` ResponseMother.WITHDRAWAL_RESPONSE_MOTHER_amount
+            address `should equal` ResponseMother.WITHDRAWAL_RESPONSE_MOTHER_address
+            opened `should equal` ResponseMother.WITHDRAWAL_RESPONSE_MOTHER_opened
+            authorized `should equal` ResponseMother.WITHDRAWAL_RESPONSE_MOTHER_authorized
+            pendingPayment `should equal` ResponseMother.WITHDRAWAL_RESPONSE_MOTHER_pendingPayment
+            txCost `should equal` ResponseMother.WITHDRAWAL_RESPONSE_MOTHER_txCost
+            txId `should equal` ResponseMother.WITHDRAWAL_RESPONSE_MOTHER_txId
+            canceled `should equal` ResponseMother.WITHDRAWAL_RESPONSE_MOTHER_canceled
+            invalidAddress `should equal` ResponseMother.WITHDRAWAL_RESPONSE_MOTHER_invalidAddress
+        }
+    }
+
+    @Test
+    fun `Should return DepositHistory`() {
+        stubFor(get(EndpointPath.GET_DEPOSIT_HISTORY)
+                .willReturn(aResponse().withBody(
+                        createDepositHistoryResponseJson())))
+
+        val depositHistory = bittrex.getDepositHistory()
+
+        depositHistory.size `should equal to` 1
+        with(depositHistory[0]) {
+            id `should equal` ResponseMother.DEPOSIT_RESPONSE_MOTHER_id
+            amount `should equal` ResponseMother.DEPOSIT_RESPONSE_MOTHER_amount
+            currency `should equal` ResponseMother.DEPOSIT_RESPONSE_MOTHER_currency
+            confirmations `should equal` ResponseMother.DEPOSIT_RESPONSE_MOTHER_confirmations
+            lastUpdated `should equal` ResponseMother.DEPOSIT_RESPONSE_MOTHER_lastUpdated
+            txId `should equal` ResponseMother.DEPOSIT_RESPONSE_MOTHER_txId
+            cryptoAddress `should equal` ResponseMother.DEPOSIT_RESPONSE_MOTHER_cryptoAddress
+        }
+    }
+
+    @Test
+    fun `Should return withdrawalRequested`() {
+        stubFor(get(EndpointPath.WITHDRAW)
+                .willReturn(aResponse().withBody(
+                        createWithdrawalRequestedResponseJson())))
+
+        val withdrawRequested = bittrex.withdraw("BTC", 250.025, "1p52lHoVR76PMDishab2YmRHsbekCdGquK", "Payment note")
+
+        withdrawRequested.uuid `should equal` ResponseMother.WITHDRAWAL_REQUESTED_RESPONSE_MOTHER_uuid
+    }
+
+    @Test
+    fun `Should return a DepositAddress`() {
+        stubFor(get(EndpointPath.GET_DEPOSIT_ADDRESS)
+                .willReturn(aResponse().withBody(
+                        createDepositAddressResponseJson())))
+
+        val depositAddress = bittrex.getDepositAddress("BTC")
+
+        depositAddress.address `should equal` ResponseMother.DEPOSIT_ADDRESS_RESPONSE_MOTHER_address
+        depositAddress.currency `should equal` ResponseMother.DEPOSIT_ADDRESS_RESPONSE_MOTHER_currency
     }
 
     private fun givenBlankCredentials() {

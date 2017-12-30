@@ -32,14 +32,14 @@ Show some examples here (Kotlin & Java)
 - [] /market/getopenorders
 
 ### Account Api (Credentials required)
-- [] /account/getbalances
-- [] /account/getbalance
-- [] /account/getdepositaddress
-- [] /account/withdraw
-- [] /account/getorder
-- [] /account/getorderhistory
-- [] /account/getwithdrawalhistory 
-- [] /account/getdeposithistory
+- [X] /account/getbalances
+- [X] /account/getbalance
+- [X] /account/getdepositaddress
+- [X] /account/withdraw
+- [X] /account/getorder
+- [X] /account/getorderhistory
+- [X] /account/getwithdrawalhistory 
+- [X] /account/getdeposithistory
 
 ## Do you like this library?
 ### Donate Bitcoin to [1NarDCZ8XAgYcmaPpuJ55qayM6ECkwSm2G](https://live.blockcypher.com/btc/address/1NarDCZ8XAgYcmaPpuJ55qayM6ECkwSm2G/)
